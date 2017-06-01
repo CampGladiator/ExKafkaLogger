@@ -17,7 +17,7 @@ defmodule ExKafkaLogger.KafkaClient do
 
   def handle_call({:message, message}, _from, kafka_pid) do
     KafkaEx.produce(@topic, 0, message, worker_name: kafka_pid)
-    {:reply, :ok, kafka}
+    {:reply, :ok, kafka_pid}
   end
 
   # Public API
