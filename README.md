@@ -1,17 +1,31 @@
 # ExKafkaLogger
 
-**TODO: Add description**
+`ExKafkaLogger` is a Elixir library that works using [Poison](https://github.com/devinus/poison "Poison Library Github"), [KafkaEx](https://github.com/kafkaex/kafka_ex "KafkaEx library Github") and [Plug](https://github.com/elixir-lang/plug "Elixir Plug library Github") to log data, parse to JSON and send it to Kafka.
+
+This library automatically gets data from the default Elixir `Logger` and from
+every request/response from your project. This data (and any data you might
+want to send) is then parsed and sent to Kafka with a specified topic.
+
+Documentation is avaiable online at [https://hexdocs.pm/ex_kafka_logger](https://hexdocs.pm/ex_kafka_logger).
+
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `ex_kafka_logger` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `ex_kafka_logger` to your list of
+dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:ex_kafka_logger, "~> 0.1.0"}]
+  [{:ex_kafka_logger, "~> 0.1"}]
 end
 ```
+
+After installing the library you will need to run the following command
+```bash
+$ mix deps.get
+``` 
+
+Then you will also need to follow the subsequent configuration steps.
 
 ### Configuration in 3 steps
 
@@ -63,7 +77,3 @@ config :ex_kafka_logger,
   kafka_consumer_group: “your_consumer_group”,
   service_name: “your_app_name”
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/ex_kafka_logger](https://hexdocs.pm/ex_kafka_logger).
