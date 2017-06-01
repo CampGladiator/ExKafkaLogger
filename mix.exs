@@ -24,7 +24,7 @@ defmodule ExKafkaLogger.Mixfile do
     [
       {:plug, "~> 1.3"},
       {:kafka_ex, "~> 0.6.5"},
-      {:poison, "~> 3.1"},
+      {:poison, "~> 2.0"},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
