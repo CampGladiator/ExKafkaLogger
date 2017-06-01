@@ -1,18 +1,27 @@
 defmodule ExKafkaLogger do
-  @moduledoc """
-  Documentation for ExKafkaLogger.
-  """
+  use GenEvent
+  use ExKafkaLogger.API
 
-  @doc """
-  Hello world.
+  # require Logger
 
-  ## Examples
+  def init(state), do: {:ok, state}
+  def handle_call(_, state), do: {:ok, :ok, state}
 
-      iex> ExKafkaLogger.hello
-      :world
+  def handle_event({level, _pid, {_logger, msg, timestamp, metadata}}, state) do
+    IO.puts "Log a log from Logger"
 
-  """
-  def hello do
-    :world
+    {{year, month, day}, {hour, minute, second, ms}} = timestamp
+    timestamp_str = "#{year}-#{month}-#{day}T#{hour}:#{minute}:#{second}.#{ms}Z"
+
+    content = %{
+      timestamp: timestamp_str,
+      info: msg,
+      metadata: metadata
+    }
+
+    IO.inspect content, label: "About to call ExKafkaLogger's log"
+
+    log(level, content)
+    {:ok, state}
   end
 end
