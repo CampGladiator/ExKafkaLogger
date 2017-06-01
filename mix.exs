@@ -37,7 +37,6 @@ defmodule ExKafkaLogger.Mixfile do
 
   defp package do
     [
-      name: ""
       maintainers: ["Jefferson Stachelski", "Gabriel Alves"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/jeffhsta/ExKafkaLogger"}
