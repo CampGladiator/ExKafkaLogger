@@ -39,8 +39,7 @@ defmodule ExKafkaLogger.Plug do
         state: conn.state
       }
     }
-
-    ExKafkaLogger.log(:info, content)
+    
     conn
   end
 end
