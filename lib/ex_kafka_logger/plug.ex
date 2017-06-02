@@ -12,7 +12,7 @@ defmodule ExKafkaLogger.Plug do
 
   defp handle_log(conn) do
     {@track_id_key, tracker_id} = conn.resp_headers
-      |> Enum.filter(fn({k, v}) -> k == @track_id_key end)
+      |> Enum.filter(fn({k, _v}) -> k == @track_id_key end)
       |> List.first
 
     content = %{
@@ -40,7 +40,6 @@ defmodule ExKafkaLogger.Plug do
       }
     }
 
-    IO.inspect content, label: "Content from handle_log"
     ExKafkaLogger.log(:info, content)
     conn
   end
