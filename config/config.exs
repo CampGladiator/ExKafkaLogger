@@ -1,6 +1,5 @@
 use Mix.Config
 
-config :kafka_ex,
-  use_ssl: false,
-  kafka_version: "0.9.0",
-  disable_default_worker: true
+# Import environment specific config. This must remain at the bottom
+# of this file so it overrides the configuration defined above.
+import_config "#{Mix.env}.exs"
