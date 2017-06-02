@@ -69,11 +69,20 @@ instance.
 In your `config/ENV.exs` file add the lines like the example below.
 
 ```elixir
+config :logger, backends: [:console, ExKafkaLogger]
+
 config :ex_kafka_logger,
-  kafka_topic: "logging",
-  kafka_uris: [
-    {"127.0.0.1", 9092}
-  ],
   kafka_consumer_group: “your_consumer_group”,
   service_name: “your_app_name”
+  
+ config :kafka_ex,
+  brokers: [
+    {"127.0.0.1", 9092},
+  ],
+  consumer_group: "consumer-group",
+  disable_default_worker: false,
+  sync_timeout: 3000,
+  max_restarts: 10,
+  max_seconds: 60,
+  kafka_version: "0.9.0"
 ```
