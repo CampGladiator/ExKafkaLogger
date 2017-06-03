@@ -15,6 +15,15 @@ defmodule ExKafkaLogger.Plug do
       |> Enum.filter(fn({k, _v}) -> k == @track_id_key end)
       |> List.first
 
+    remote_ip_temp =
+      conn.remote_ip
+      |> Tuple.to_list()
+      |> Enum.reduce("", fn(x, acc) ->
+         acc <> Integer.to_string(x) <> "."
+       end)
+
+    remote_ip_str = String.slice(remote_ip_temp, 0..(String.length(remote_ip_temp)-2))
+
     content = %{
       service: @service_name,
       level: :info,
@@ -27,7 +36,7 @@ defmodule ExKafkaLogger.Plug do
         path_info: conn.path_info,
         path_params: conn.path_params,
         query_params: conn.query_params,
-        remote_ip: "{127.0.0.1}", # TODO: conn.remote_ip = {127, 0. 0, 1},
+        remote_ip: remote_ip_str,
         req_cookies: conn.req_cookies,
         req_headers: "HTTP headers", # TODO: conn.req_headers = %{ {}, {} },
         request_path: conn.request_path,
@@ -39,7 +48,8 @@ defmodule ExKafkaLogger.Plug do
         state: conn.state
       }
     }
-    
+
+    ExKafkaLogger.log(:info, content)
     conn
   end
 end
