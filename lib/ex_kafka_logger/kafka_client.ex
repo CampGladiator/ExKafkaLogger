@@ -1,7 +1,7 @@
 defmodule ExKafkaLogger.KafkaClient do
   use GenServer
 
-  @topic Application.get_env(:ex_kafka_logger, :kafka_topic)
+  @topic Application.get_env(:ex_kafka_logger, :kafka_topic, "logging")
 
   # Server API
 
