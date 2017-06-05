@@ -18,15 +18,19 @@ defmodule ExKafkaLogger.API do
       end
 
       def log(level, content) when is_map(content) do
-        new_content = content
-          |> Map.merge(%{ timestamp: DateTime.utc_now |> DateTime.to_string })
-
+        new_content = Map.merge(content, %{ timestamp: get_timestamp_str() })
         log(level, new_content)
       end
 
       def log(level, content) when is_bitstring(content) do
         log(level, %{log: content})
       end
+
+      defp get_timestamp_str() do
+        {{year, month, day}, {hour, minute, second}} = :calendar.local_time()
+        timestamp_str = "#{year}-#{month}-#{day}T#{hour}:#{minute}:#{second}"
+      end
+
     end
   end
 end
