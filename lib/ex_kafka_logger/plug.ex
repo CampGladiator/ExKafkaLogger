@@ -11,38 +11,30 @@ defmodule ExKafkaLogger.Plug do
   end
 
   defp handle_log(conn) do
-    {@track_id_key, tracker_id} = conn.resp_headers
-      |> Enum.filter(fn({k, _v}) -> k == @track_id_key end)
-      |> List.first
-
-    remote_ip_temp =
-      conn.remote_ip
-      |> Tuple.to_list()
-      |> Enum.reduce("", fn(x, acc) ->
-         acc <> Integer.to_string(x) <> "."
-       end)
-
-    remote_ip_str = String.slice(remote_ip_temp, 0..(String.length(remote_ip_temp)-2))
-
     content = %{
+      type: "NETWORK",
       service: @service_name,
-      level: :info,
-      tracker_id: tracker_id,
+      level: "INFO",
+      tracker_id: extract_request_id(conn.resp_headers),
       info: %{
-        body_params: conn.body_params,
-        cookies: conn.cookies,
-        host: conn.host,
-        method: conn.method,
         path_info: conn.path_info,
+        method: conn.method,
+        body_params: conn.body_params,
+        remote_ip: parse_remote_ip(conn.remote_ip),
+        host: conn.host,
+
+        cookies: conn.cookies,
         path_params: conn.path_params,
         query_params: conn.query_params,
-        remote_ip: remote_ip_str,
-        req_cookies: conn.req_cookies,
-        req_headers: "HTTP headers", # TODO: conn.req_headers = %{ {}, {} },
+
         request_path: conn.request_path,
-        resp_body: conn.resp_body,
+        req_cookies: conn.req_cookies,
+        req_headers: Map.new(conn.req_headers),
+
+        resp_headers: Map.new(conn.resp_headers),
+        resp_body: Poison.decode!(conn.resp_body),
         resp_cookies: conn.resp_cookies,
-        resp_headers: "HTTP headers", # TODO: conn.resp_headers = %{ {}, {} },
+
         scheme: conn.scheme,
         script_name: conn.script_name,
         state: conn.state
@@ -51,5 +43,18 @@ defmodule ExKafkaLogger.Plug do
 
     ExKafkaLogger.log(:info, content)
     conn
+  end
+
+  defp parse_remote_ip(remote_ip) do
+    remote_ip
+    |> Tuple.to_list
+    |> Enum.join(".")
+  end
+
+  defp extract_request_id(resp_headers) do
+    {@track_id_key, tracker_id} = resp_headers
+      |> Enum.filter(fn({k, _v}) -> k == @track_id_key end)
+      |> List.first
+    tracker_id
   end
 end

@@ -2,6 +2,7 @@ defmodule ExKafkaLogger.API do
   defmacro __using__(_) do
     quote do
       @service_name Application.get_env(:ex_kafka_logger, :service_name)
+      @default_tracker_id "No-Tracker-ID"
 
       def log(level, content = %{timestamp: timestamp_str}) do
         log = %{
@@ -9,7 +10,7 @@ defmodule ExKafkaLogger.API do
           info: content,
           level: level |> Atom.to_string |> String.upcase,
           service: @service_name,
-          tracker_id: "" # TODO: get this tracker_id from
+          tracker_id: content.tracker_id
         }
         |> Poison.encode!
 
