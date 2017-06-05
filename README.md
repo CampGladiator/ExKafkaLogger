@@ -23,7 +23,7 @@ end
 After installing the library you will need to run the following command
 ```bash
 $ mix deps.get
-``` 
+```
 
 Then you will also need to follow the subsequent configuration steps.
 
@@ -72,9 +72,9 @@ In your `config/ENV.exs` file add the lines like the example below.
 config :logger, backends: [:console, ExKafkaLogger]
 
 config :ex_kafka_logger,
-  kafka_consumer_group: “your_consumer_group”,
+  kafka_topic: “your_logging_topic”,
   service_name: “your_app_name”
-  
+
  config :kafka_ex,
   brokers: [
     {"127.0.0.1", 9092},
@@ -86,3 +86,8 @@ config :ex_kafka_logger,
   max_seconds: 60,
   kafka_version: "0.9.0"
 ```
+
+## Example Application
+
+[Here](https://github.com/goalves/phoenixLoggedApp) is an example of how to use
+this library to log a simple Phoenix Application.
