@@ -77,8 +77,8 @@ In your `config/ENV.exs` file add the lines like the example below.
 config :logger, backends: [:console, ExKafkaLogger]
 
 config :ex_kafka_logger,
-  kafka_topic: “your_logging_topic”,
-  service_name: “your_app_name”
+  kafka_topic: "your_logging_topic",
+  service_name: "your_app_name"
 
  config :kafka_ex,
   brokers: [
