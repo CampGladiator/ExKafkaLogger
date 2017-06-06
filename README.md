@@ -50,10 +50,15 @@ end
 
 #### Step 2
 
-Create a `handle_error` function in the end of your `router.ex` file to catch the
+Use `Plug.ErrorHandler` and create a `handle_error` function in the end of your `router.ex` file to catch the
  errors without let Phoenix send the default errors response, like the example below.
 
 ```elixir
+use YourApp.Web, :router
+use Plug.ErrorHandler
+
+# ... your code ...
+
 defp handle_errors(conn, _) do
   response = ExKafkaLogger.HttpError.template(conn.status)
   json(conn, response)
