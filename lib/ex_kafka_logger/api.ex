@@ -60,10 +60,9 @@ defmodule ExKafkaLogger.API do
       end
 
       defp get_timestamp_str() do
-        {{year, month, day}, {hour, minute, second}} = :calendar.local_time()
-        timestamp_str = "#{year}-#{month}-#{day}T#{hour}:#{minute}:#{second}"
+        DateTime.utc_now()
+        |> DateTime.to_iso8601()
       end
-
     end
   end
 end
