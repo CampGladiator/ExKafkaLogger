@@ -16,6 +16,8 @@ defmodule ExKafkaLogger.KafkaClient do
     {:reply, :ok, state}
   end
 
+  def handle_call(_, _from, state), do: {:reply, :ok, state}
+
   # Public API
 
   def produce(message) do

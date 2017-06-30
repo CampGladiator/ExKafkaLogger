@@ -7,8 +7,10 @@ defmodule ExKafkaLogger.Application do
     if is_nil(topic) do
       raise RuntimeError, message: "There is no topic configured"
     end
+
     import Supervisor.Spec, warn: false
     KafkaEx.metadata(topic)
+
     children = [
       worker(ExKafkaLogger.KafkaClient, [])
     ]

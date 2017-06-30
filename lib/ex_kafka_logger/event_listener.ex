@@ -5,21 +5,26 @@ defmodule ExKafkaLogger.EventListener do
       use GenEvent
 
       def init(state), do: {:ok, state}
-      def handle_call(_, state), do: {:ok, :ok, state}
 
       def handle_event({level, _pid, {_logger, msg, _timestamp, metadata}}, state) do
-        metadata_map = Map.new metadata
+        try do
+          metadata_map = Map.new metadata
 
-        content = %{
-          type: "INTERNAL",
-          info: msg,
-          tracker_id: Map.get(metadata_map, :request_id, @default_tracker_id),
-          metadata: Map.delete(metadata_map, :pid)
-        }
+          content = %{
+            type: "INTERNAL",
+            info: msg,
+            tracker_id: Map.get(metadata_map, :request_id, @default_tracker_id),
+            metadata: Map.delete(metadata_map, :pid)
+          }
 
-        log(level, content)
-        {:ok, state}
+          log(level, content)
+          {:ok, state}
+        rescue
+          _ -> {:error,  "Some error happened when parsing the log"}
+        end
       end
+
+      def handle_call(_, state), do: {:ok, :ok, state}
     end
   end
 end
