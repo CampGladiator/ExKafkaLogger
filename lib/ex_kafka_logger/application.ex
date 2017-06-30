@@ -9,7 +9,7 @@ defmodule ExKafkaLogger.Application do
     end
 
     import Supervisor.Spec, warn: false
-    KafkaEx.metadata(topic)
+    KafkaEx.metadata(topic: topic)
 
     children = [
       worker(ExKafkaLogger.KafkaClient, [])
