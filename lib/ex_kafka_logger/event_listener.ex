@@ -12,7 +12,7 @@ defmodule ExKafkaLogger.EventListener do
 
           content = %{
             type: "INTERNAL",
-            info: convert_message(msg),
+            data: convert_message(msg),
             tracker_id: Map.get(metadata_map, :request_id, @default_tracker_id),
             metadata: Map.delete(metadata_map, :pid)
           }
@@ -20,7 +20,9 @@ defmodule ExKafkaLogger.EventListener do
           log(level, content)
           {:ok, state}
         rescue
-          _ -> {:error,  "Some error happened when parsing the log"}
+          _ ->
+            {:error,  "Some error happened when parsing the log"}
+            {:ok, state}
         end
       end
 

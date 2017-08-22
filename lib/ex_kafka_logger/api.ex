@@ -4,6 +4,8 @@ defmodule ExKafkaLogger.API do
       @service_name Application.get_env(:ex_kafka_logger, :service_name)
       @default_tracker_id "No-Tracker-ID"
 
+      alias ExKafkaLogger.KafkaClient
+
       @doc """
       The function receive two arguments the log level that is an `Atom` and
       could be (`:info`, `:debug`, `:warn` or `:error`), the second argument is
@@ -14,17 +16,17 @@ defmodule ExKafkaLogger.API do
       :ok
       ```
       """
-      def log(level, content = %{timestamp: timestamp_str}) do
+      def log(level, content = %{timestamp: timestamp}) do
         log = %{
-          timestamp: timestamp_str,
-          info: content,
+          timestamp: timestamp,
+          data: content,
           level: level |> Atom.to_string |> String.upcase,
           service: @service_name,
           tracker_id: content.tracker_id
         }
         |> Poison.encode!
 
-        ExKafkaLogger.KafkaClient.produce(log)
+        KafkaClient.produce(log)
       end
 
       @doc """
@@ -41,7 +43,7 @@ defmodule ExKafkaLogger.API do
       ```
       """
       def log(level, content) when is_map(content) do
-        new_content = Map.merge(content, %{ timestamp: get_timestamp_str() })
+        new_content = Map.put(content, :timestamp, NaiveDateTime.utc_now)
         log(level, new_content)
       end
 
@@ -57,11 +59,6 @@ defmodule ExKafkaLogger.API do
       """
       def log(level, content) when is_bitstring(content) do
         log(level, %{log: content})
-      end
-
-      defp get_timestamp_str() do
-        DateTime.utc_now()
-        |> DateTime.to_iso8601()
       end
     end
   end
