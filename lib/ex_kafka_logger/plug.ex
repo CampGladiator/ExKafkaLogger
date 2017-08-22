@@ -16,7 +16,7 @@ defmodule ExKafkaLogger.Plug do
       service: @service_name,
       level: "INFO",
       tracker_id: extract_request_id(conn.resp_headers),
-      info: %{
+      data: %{
         path_info: conn.path_info,
         method: conn.method,
         body_params: conn.body_params,
@@ -41,7 +41,7 @@ defmodule ExKafkaLogger.Plug do
       }
     }
 
-    ExKafkaLogger.log(:info, content)
+    ExKafkaLogger.info(content)
     conn
   end
 
