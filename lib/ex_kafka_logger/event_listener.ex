@@ -8,11 +8,11 @@ defmodule ExKafkaLogger.EventListener do
 
       def handle_event({level, _pid, {_logger, msg, _timestamp, metadata}}, state) do
         try do
-          metadata_map = Map.new metadata
+          metadata_map = Map.new(metadata)
 
           content = %{
             type: "INTERNAL",
-            info: msg,
+            info: convert_message(msg),
             tracker_id: Map.get(metadata_map, :request_id, @default_tracker_id),
             metadata: Map.delete(metadata_map, :pid)
           }
@@ -25,6 +25,14 @@ defmodule ExKafkaLogger.EventListener do
       end
 
       def handle_call(_, state), do: {:ok, :ok, state}
+
+      defp convert_message(msg) when is_list(msg) do
+        msg |> List.flatten |> Enum.map(&convert_int_asc_to_string/1) |> Enum.join("")
+      end
+      defp convert_message(msg), do: msg
+
+      defp convert_int_asc_to_string(data) when is_bitstring(data), do: data
+      defp convert_int_asc_to_string(data) when is_integer(data), do: <<data>>
     end
   end
 end
