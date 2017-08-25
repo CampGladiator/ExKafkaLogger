@@ -1,20 +1,19 @@
 defmodule ExKafkaLogger.EventListener do
   defmacro __using__(_) do
     quote do
-      @default_tracker_id "No-Tracker-ID"
       use GenEvent
 
       def init(state), do: {:ok, state}
 
-      def handle_event({level, _pid, {_logger, msg, _timestamp, metadata}}, state) do
+      def handle_event({level, _pid, {_logger, log_msg, _timestamp, metadata}}, state) do
         try do
           metadata_map = Map.new(metadata)
 
           content = %{
-            type: "INTERNAL",
-            data: convert_message(msg),
-            tracker_id: Map.get(metadata_map, :request_id, @default_tracker_id),
-            metadata: Map.delete(metadata_map, :pid)
+            level: level,
+            metadata: Map.delete(metadata_map, :pid),
+            content: convert_message(log_msg),
+            type: convert_log_type(metadata_map.module)
           }
 
           log(level, content)
@@ -35,6 +34,13 @@ defmodule ExKafkaLogger.EventListener do
 
       defp convert_int_asc_to_string(data) when is_bitstring(data), do: data
       defp convert_int_asc_to_string(data) when is_integer(data), do: <<data>>
+
+      defp convert_log_type(module) do
+        "Elixir." <> module_name = module |> Atom.to_string
+        module_name
+        |> String.split(".")
+        |> List.first
+      end
     end
   end
 end
