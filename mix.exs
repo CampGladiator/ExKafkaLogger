@@ -16,15 +16,15 @@ defmodule ExKafkaLogger.Mixfile do
   end
 
   def application do
-    [ applications: [:kafka_ex, :logger],
+    [ applications: [:kaffe, :logger],
       mod: {ExKafkaLogger.Application, []}
     ]
   end
 
   defp deps do
     [ {:plug, "~> 1.3"},
-      {:kafka_ex, "~> 0.7"},
       {:poison, "~> 2.0"},
+      {:kaffe, "~> 1.0"},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
