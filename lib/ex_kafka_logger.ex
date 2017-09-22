@@ -1,8 +1,8 @@
 defmodule ExKafkaLogger do
   @moduledoc File.read!(Path.expand("../README.md", __DIR__))
 
-  use ExKafkaLogger.API
   use ExKafkaLogger.EventListener
+  require Logger
 
   @doc """
   Alias to `ExKafkaLogger.log(:info, log)`
@@ -47,4 +47,24 @@ defmodule ExKafkaLogger do
   ```
   """
   def warn(log), do: log(:warn, log)
+
+  @doc """
+  Forward the log message to Logger
+  ## Example
+  ```elixir
+  iex> ExKafkaLogger.log(:warn, "Some warn to log on Kafka")
+  :ok
+  ```
+  """
+  def log(level, log) when is_bitstring(log), do: Logger.log(level, log)
+
+  @doc """
+  Forward the log encoded to JSON to Logger
+  ## Example
+  ```elixir
+  iex> ExKafkaLogger.log(:warn, %{msg: "Some warn to log on Kafka"})
+  :ok
+  ```
+  """
+  def log(level, log) when is_map(log), do: Logger.log(level, log |> Poison.encode!)
 end
