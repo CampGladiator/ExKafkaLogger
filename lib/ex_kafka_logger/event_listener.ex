@@ -5,23 +5,27 @@ defmodule ExKafkaLogger.EventListener do
 
       def init(state), do: {:ok, state}
 
-      def handle_event({level, _pid, {_logger, log_msg, _timestamp, metadata}}, state) do
-        try do
-          metadata_map = Map.new(metadata)
-
-          content = %{
-            level: level,
-            metadata: Map.delete(metadata_map, :pid),
-            content: convert_message(log_msg),
-            type: convert_log_type(metadata_map.module)
-          }
-
-          log(level, content)
-          {:ok, state}
-        rescue
+      def handle_event(data = {level, _pid, {_logger, log_msg, _timestamp, metadata}}, state) do
+        metadata
+        |> Keyword.get(:application)
+        |> case do
+          :kaffe -> {:ok, state}
           _ ->
-            {:error,  "Some error happened when parsing the log"}
-            {:ok, state}
+            try do
+              metadata_map = Map.new(metadata)
+
+              content = %{
+                level: level,
+                metadata: Map.delete(metadata_map, :pid),
+                content: convert_message(log_msg),
+                type: convert_log_type(metadata_map.module)
+              }
+
+              log(level, content)
+              {:ok, state}
+            rescue
+              _ -> {:ok, state}
+            end
         end
       end
 
@@ -35,6 +39,7 @@ defmodule ExKafkaLogger.EventListener do
       defp convert_int_asc_to_string(data) when is_bitstring(data), do: data
       defp convert_int_asc_to_string(data) when is_integer(data), do: <<data>>
 
+      defp convert_log_type(nil), do: nil
       defp convert_log_type(module) do
         "Elixir." <> module_name = module |> Atom.to_string
         module_name

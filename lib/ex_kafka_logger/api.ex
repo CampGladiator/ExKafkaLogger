@@ -2,7 +2,7 @@ defmodule ExKafkaLogger.API do
   defmacro __using__(_) do
     quote do
       @service_name Application.get_env(:ex_kafka_logger, :service_name)
-      @default_tracker_id "No-Tracker-ID"
+      @default_request_id "No-Tracker-ID"
 
       alias ExKafkaLogger.KafkaClient
 
@@ -17,16 +17,15 @@ defmodule ExKafkaLogger.API do
       ```
       """
       def log(level, content = %{timestamp: timestamp}) do
-        log = %{
+        %{
           timestamp: timestamp,
           data: content,
           level: level |> Atom.to_string |> String.upcase,
           service: @service_name,
-          tracker_id: content.tracker_id
+          request_id: content |> Map.get(:request_id, @default_request_id)
         }
         |> Poison.encode!
-
-        KafkaClient.produce(log)
+        |> KafkaClient.produce()
       end
 
       @doc """
@@ -43,7 +42,7 @@ defmodule ExKafkaLogger.API do
       ```
       """
       def log(level, content) when is_map(content) do
-        new_content = Map.put(content, :timestamp, NaiveDateTime.utc_now)
+        new_content = Map.put(content, :timestamp, DateTime.utc_now)
         log(level, new_content)
       end
 
