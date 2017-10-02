@@ -22,7 +22,7 @@ defmodule ExKafkaLogger.Mixfile do
   end
 
   defp deps do
-    [ {:plug, "~> 1.3"},
+    [
       {:poison, "~> 2.0"},
       {:kaffe, "~> 1.0"},
       {:ex_doc, ">= 0.0.0", only: :dev}

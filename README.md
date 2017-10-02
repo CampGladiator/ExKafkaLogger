@@ -1,6 +1,6 @@
 # ExKafkaLogger
 
-`ExKafkaLogger` is a Elixir library that works using [Poison](https://github.com/devinus/poison "Poison Library Github"), [Kaffe](https://github.com/spreedly/kaffe/ "Kaffe library Github") and [Plug](https://github.com/elixir-lang/plug "Elixir Plug library Github") to log data, parse to JSON and send it to Kafka.
+`ExKafkaLogger` is a Elixir library that wraps `Elixir.Logger` in order to send all related logs to Kafka. It works using [Poison](https://github.com/devinus/poison "Poison Library Github") and [Kaffe](https://github.com/spreedly/kaffe/ "Kaffe library Github").
 
 This library automatically gets data from the default Elixir `Logger` and from
 every request/response from your project. This data (and any data you might
@@ -27,45 +27,7 @@ $ mix deps.get
 
 Then you will also need to follow the subsequent configuration steps.
 
-### Configuration in 3 steps
-
-#### Step 1
-
-Add the ExKafkaLogger Plug on your Phoenix `endpoint.ex` file just above `plug YourApp.Router`
-
-It should looks like:
-
-```elixir
-# ...
-
-  plug Plug.Session,
-    store: :cookie,
-    key: "_my_app_key",
-    signing_salt: "SECRET_SALT"
-
-  plug ExKafkaLogger.Plug
-  plug MyApp.Router
-end
-```
-
-#### Step 2
-
-Use `Plug.ErrorHandler` and create a `handle_error` function in the end of your `router.ex` file to catch the
- errors without let Phoenix send the default errors response, like the example below.
-
-```elixir
-use YourApp.Web, :router
-use Plug.ErrorHandler
-
-# ... your code ...
-
-defp handle_errors(conn, _) do
-  response = ExKafkaLogger.HttpError.template(conn.status)
-  json(conn, response)
-end
-```
-
-#### Step 3
+## Configuration
 
 Configure your application to make the Elixir `Logger` to use `ExKafkaLogger` as
 one of your backend and let `ExKafkaLogger` knows how to connect in your Kafka
