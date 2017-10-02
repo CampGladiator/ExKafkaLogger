@@ -1,6 +1,6 @@
 # ExKafkaLogger
 
-`ExKafkaLogger` is a Elixir library that works using [Poison](https://github.com/devinus/poison "Poison Library Github"), [KafkaEx](https://github.com/kafkaex/kafka_ex "KafkaEx library Github") and [Plug](https://github.com/elixir-lang/plug "Elixir Plug library Github") to log data, parse to JSON and send it to Kafka.
+`ExKafkaLogger` is a Elixir library that works using [Poison](https://github.com/devinus/poison "Poison Library Github"), [Kaffe](https://github.com/spreedly/kaffe/ "Kaffe library Github") and [Plug](https://github.com/elixir-lang/plug "Elixir Plug library Github") to log data, parse to JSON and send it to Kafka.
 
 This library automatically gets data from the default Elixir `Logger` and from
 every request/response from your project. This data (and any data you might
@@ -80,16 +80,13 @@ config :ex_kafka_logger,
   kafka_topic: "your_logging_topic",
   service_name: "your_app_name"
 
- config :kafka_ex,
-  brokers: [
-    {"127.0.0.1", 9092},
-  ],
-  consumer_group: "consumer-group",
-  disable_default_worker: false,
-  sync_timeout: 3000,
-  max_restarts: 10,
-  max_seconds: 60,
-  kafka_version: "0.9.0"
+config :kaffe,
+  consumer: [
+    heroku_kafka_env: true,
+    topics: ["interesting-topic"],
+    consumer_group: "your-app-consumer-group",
+    message_handler: MessageProcessor
+  ]
 ```
 
 ## Example Application
