@@ -7,6 +7,5 @@ defmodule ExKafkaLogger.KafkaClient do
   def produce(message) do
     key = "#{0..9999 |> Enum.take_random(1) |> List.first}"
     Producer.produce_sync(@topic, [{key, message}])
-    :ok
   end
 end

@@ -3,7 +3,7 @@ defmodule ExKafkaLogger.Mixfile do
 
   def project do
     [ app: :ex_kafka_logger,
-      version: "1.0.0",
+      version: "2.0.0",
       elixir: "~> 1.4",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -22,7 +22,7 @@ defmodule ExKafkaLogger.Mixfile do
   end
 
   defp deps do
-    [ {:plug, "~> 1.3"},
+    [
       {:poison, "~> 2.0"},
       {:kaffe, "~> 1.0"},
       {:ex_doc, ">= 0.0.0", only: :dev}
