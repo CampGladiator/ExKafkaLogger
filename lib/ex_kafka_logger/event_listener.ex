@@ -1,7 +1,7 @@
 defmodule ExKafkaLogger.EventListener do
   defmacro __using__(_) do
     quote do
-      use GenEvent
+      @behaviour :gen_event
       alias ExKafkaLogger.ParseHandler
 
       def init(state), do: {:ok, state}
@@ -19,6 +19,7 @@ defmodule ExKafkaLogger.EventListener do
       end
 
       def handle_call(_, state), do: {:ok, state}
+      def handle_info(_, state), do: {:ok, state}
 
       defp process_log(%{application: :kaffe}, _log_msg, _level), do: :ok
       defp process_log(metadata, log_msg, level) do
