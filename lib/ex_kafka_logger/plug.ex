@@ -15,7 +15,7 @@ defmodule ExKafkaLogger.Plug do
       type: "NETWORK",
       service: @service_name,
       level: "INFO",
-      tracker_id: extract_request_id(conn.resp_headers),
+      request_id: extract_request_id(conn.resp_headers),
       data: %{
         path_info: conn.path_info,
         method: conn.method,
