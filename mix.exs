@@ -3,7 +3,7 @@ defmodule ExKafkaLogger.Mixfile do
 
   def project do
     [ app: :ex_kafka_logger,
-      version: "2.0.0",
+      version: "3.0.0",
       elixir: "~> 1.4",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -16,7 +16,7 @@ defmodule ExKafkaLogger.Mixfile do
   end
 
   def application do
-    [ applications: [:kaffe, :logger],
+    [ applications: [:logger, :kafka_ex],
       mod: {ExKafkaLogger.Application, []}
     ]
   end
@@ -24,7 +24,7 @@ defmodule ExKafkaLogger.Mixfile do
   defp deps do
     [
       {:poison, "~> 2.0"},
-      {:kaffe, "~> 1.0"},
+      {:kafka_ex, "~> 0.8"},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
