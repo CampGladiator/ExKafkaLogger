@@ -1,11 +1,7 @@
 defmodule ExKafkaLogger.KafkaClient do
   use GenServer
-  alias Kaffe.Producer
 
   @topic Application.get_env(:ex_kafka_logger, :kafka_topic, "logging")
 
-  def produce(message) do
-    key = "#{0..9999 |> Enum.take_random(1) |> List.first}"
-    Producer.produce_sync(@topic, [{key, message}])
-  end
+  def produce(message), do: KafkaEx.produce(@topic, 0, message)
 end
