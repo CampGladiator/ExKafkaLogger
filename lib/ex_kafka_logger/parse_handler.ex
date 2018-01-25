@@ -17,12 +17,12 @@ defmodule ExKafkaLogger.ParseHandler do
     %{
       timestamp: timestamp,
       metadata: data |> Map.get(:metadata, %{}),
-      level: level |> Atom.to_string |> String.upcase,
+      level: level |> Atom.to_string() |> String.upcase(),
       service: @service_name,
       request_id: data |> Map.get(:request_id),
       content: content
     }
-    |> Poison.encode!
+    |> Poison.encode!()
     |> KafkaClient.produce()
   end
 
@@ -40,9 +40,7 @@ defmodule ExKafkaLogger.ParseHandler do
   ```
   """
   def log(level, log) when is_map(log) do
-    log(level,
-        Map.put(log, :timestamp, DateTime.utc_now)
-    )
+    log(level, Map.put(log, :timestamp, DateTime.utc_now()))
   end
 
   @doc """
