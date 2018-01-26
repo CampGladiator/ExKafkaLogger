@@ -5,7 +5,6 @@ defmodule ExKafkaLogger.KafkaClient do
 
   def produce(message, key \\ nil) do
     partition = select_partition(key)
-    IO.inspect(%{partition: partition, key: key}, label: "Produce message")
     KafkaEx.produce(@topic, partition, message, key: key)
   end
 
