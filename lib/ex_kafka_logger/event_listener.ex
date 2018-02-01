@@ -57,7 +57,7 @@ defmodule ExKafkaLogger.EventListener do
       defp convert_log_type(nil), do: nil
 
       defp convert_log_type(module) do
-        "Elixir." <> module_name = module |> Atom.to_string()
+        "Elixir." <> module_name = Atom.to_string(module)
 
         module_name
         |> String.split(".")
