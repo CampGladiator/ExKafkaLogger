@@ -20,6 +20,6 @@ defmodule ExKafkaLogger.HttpError do
   end
 
   defp meta_template(message) do
-    %{ message: message }
+    %{message: message}
   end
 end

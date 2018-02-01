@@ -66,5 +66,5 @@ defmodule ExKafkaLogger do
   :ok
   ```
   """
-  def log(level, log) when is_map(log), do: Logger.log(level, log |> Poison.encode!)
+  def log(level, log) when is_map(log), do: Logger.log(level, Poison.encode!(log))
 end

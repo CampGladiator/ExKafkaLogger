@@ -14,16 +14,18 @@ defmodule ExKafkaLogger.ParseHandler do
   ```
   """
   def log(level, data = %{timestamp: timestamp, content: content}) do
+    request_id = data |> Map.get(:metadata, %{}) |> Map.get(:request_id)
+
     %{
       timestamp: timestamp,
       metadata: data |> Map.get(:metadata, %{}),
-      level: level |> Atom.to_string |> String.upcase,
+      level: level |> Atom.to_string() |> String.upcase(),
       service: @service_name,
-      request_id: data |> Map.get(:request_id),
+      request_id: request_id,
       content: content
     }
-    |> Poison.encode!
-    |> KafkaClient.produce()
+    |> Poison.encode!()
+    |> KafkaClient.produce(request_id)
   end
 
   @doc """
@@ -39,11 +41,8 @@ defmodule ExKafkaLogger.ParseHandler do
   :ok
   ```
   """
-  def log(level, log) when is_map(log) do
-    log(level,
-        Map.put(log, :timestamp, DateTime.utc_now)
-    )
-  end
+  def log(level, log) when is_map(log),
+    do: log(level, Map.put(log, :timestamp, DateTime.utc_now()))
 
   @doc """
   The function receive two arguments the log level that is an `Atom` and
@@ -55,7 +54,5 @@ defmodule ExKafkaLogger.ParseHandler do
   :ok
   ```
   """
-  def log(level, content) when is_bitstring(content) do
-    log(level, %{content: content})
-  end
+  def log(level, content) when is_bitstring(content), do: log(level, %{content: content})
 end

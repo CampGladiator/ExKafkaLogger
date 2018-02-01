@@ -12,6 +12,7 @@ defmodule ExKafkaLogger.EventListener do
           |> Map.new()
           |> Map.delete(:pid)
           |> process_log(log_msg, level)
+
           {:ok, state}
         rescue
           _ -> {:ok, state}
@@ -22,6 +23,7 @@ defmodule ExKafkaLogger.EventListener do
       def handle_info(_, state), do: {:ok, state}
 
       defp process_log(%{application: :kaffe}, _log_msg, _level), do: :ok
+
       defp process_log(metadata, log_msg, level) do
         content = %{
           level: level,
@@ -35,10 +37,11 @@ defmodule ExKafkaLogger.EventListener do
 
       defp convert_message(msg) when is_list(msg) do
         msg
-        |> List.flatten
+        |> List.flatten()
         |> Enum.map(&convert_int_asc_to_string/1)
         |> Enum.join("")
       end
+
       defp convert_message(msg) do
         msg
         |> Poison.decode()
@@ -52,11 +55,13 @@ defmodule ExKafkaLogger.EventListener do
       defp convert_int_asc_to_string(data) when is_integer(data), do: <<data>>
 
       defp convert_log_type(nil), do: nil
+
       defp convert_log_type(module) do
-        "Elixir." <> module_name = module |> Atom.to_string
+        "Elixir." <> module_name = Atom.to_string(module)
+
         module_name
         |> String.split(".")
-        |> List.first
+        |> List.first()
       end
     end
   end
