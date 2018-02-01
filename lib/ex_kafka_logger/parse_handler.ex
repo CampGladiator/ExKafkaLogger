@@ -15,11 +15,13 @@ defmodule ExKafkaLogger.ParseHandler do
   """
   def log(level, data = %{timestamp: timestamp, content: content}) do
     request_id = data |> Map.get(:metadata, %{}) |> Map.get(:request_id)
+    level = level |> Atom.to_string() |> String.upcase()
+    metadata = data |> Map.get(:metadata, %{})
 
     %{
       timestamp: timestamp,
-      metadata: data |> Map.get(:metadata, %{}),
-      level: level |> Atom.to_string() |> String.upcase(),
+      metadata: metadata,
+      level: level,
       service: @service_name,
       request_id: request_id,
       content: content
