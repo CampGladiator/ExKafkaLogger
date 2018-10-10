@@ -10,4 +10,4 @@ config :kafka_ex,
   kafka_version: "0.9.0",
   use_ssl: false
 
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"
