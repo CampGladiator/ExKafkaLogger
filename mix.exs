@@ -12,7 +12,7 @@ defmodule ExKafkaLogger.Mixfile do
       description: description(),
       package: package(),
       name: "ExKafkaLogger",
-      source_url: "https://github.com/jeffhsta/ExKafkaLogger"
+      source_url: "https://github.com/Heckfer/ExKafkaLogger"
     ]
   end
 
@@ -38,7 +38,7 @@ defmodule ExKafkaLogger.Mixfile do
     [
       maintainers: ["Jefferson Stachelski", "Gabriel Alves"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/jeffhsta/ExKafkaLogger"}
+      links: %{"GitHub" => "https://github.com/Heckfer/ExKafkaLogger"}
     ]
   end
 end
